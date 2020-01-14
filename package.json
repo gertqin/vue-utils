@@ -2,7 +2,7 @@
   "name": "vue-utils",
   "displayName": "Vue Utils",
   "description": "Utility commands for Vue",
-  "version": "0.3.0",
+  "version": "0.2.1",
   "publisher": "gertqin",
   "engines": {
     "vscode": "^1.22.0"
