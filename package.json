@@ -1,0 +1,67 @@
+{
+  "name": "vue-utils",
+  "displayName": "Vue Utils",
+  "description": "Utility commands for Vue",
+  "version": "0.2.1",
+  "publisher": "gertqin",
+  "engines": {
+    "vscode": "^1.21.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:extension.switchBetweenVueAndTsFile",
+    "onCommand:extension.createVueComponent",
+    "onCommand:extension.createVueComponentFromExplorer"
+  ],
+  "main": "./out/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.switchBetweenVueAndTsFile",
+        "title": "Switch between .vue and .vue.ts file"
+      },
+      {
+        "command": "extension.createVueComponent",
+        "title": "Create a new vue component"
+      },
+      {
+        "command": "extension.createVueComponentFromExplorer",
+        "title": "New Vue Component"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "extension.switchBetweenVueAndTsFile",
+        "key": "alt+;"
+      },
+      {
+        "command": "extension.createVueComponent",
+        "key": "alt+n",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "extension.createVueComponentFromExplorer"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^3.1.3",
+    "vscode": "^1.1.21",
+    "tslint": "^5.11.0",
+    "@types/node": "^10.11.7",
+    "@types/mocha": "^5.2.5"
+  }
+}
