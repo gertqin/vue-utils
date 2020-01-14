@@ -1,6 +1,8 @@
-import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
+import * as vscode from "vscode";
+import * as fs from "fs";
+import * as path from "path";
+import { selectFile, fileExists } from "./tools";
+import { getVueTemplate, getTsFileExtension, getTsTemplate } from "./config-helper";
 
 export async function createVueComponentFiles(file?: any) {
   let folderPath = "";
@@ -17,16 +19,17 @@ export async function createVueComponentFiles(file?: any) {
   vscode.window.showInformationMessage(folderPath);
 
   const componentName = await showComponentNameDialog();
-  if (!componentName) { return; }
+  if (!componentName) {
+    return;
+  }
 
   const filePathBase = folderPath + "/" + componentName;
 
-
-  const tsFilePath = filePathBase + ".vue.ts";
-  const tsFileSuccess = createFile(tsFilePath, tsTemplate(componentName));
+  const tsFilePath = filePathBase + getTsFileExtension();
+  const tsFileSuccess = createFile(tsFilePath, getTsTemplate(componentName));
 
   const vueFilePath = filePathBase + ".vue";
-  const vueFileSuccess = createFile(vueFilePath, vueTemplate(componentName));
+  const vueFileSuccess = createFile(vueFilePath, getVueTemplate(componentName));
 
   if (tsFileSuccess) {
     selectFile(tsFilePath);
@@ -47,13 +50,13 @@ async function showComponentNameDialog() {
 
 async function createFile(filePath: string, content: string = "") {
   const filename = filePath.substr(path.dirname(filePath).length + 1);
-  if (await fileExists(filePath)) {
+  if (fileExists(filePath)) {
     vscode.window.showInformationMessage(`The file ${filename} already exists`);
     return false;
   }
 
   return new Promise(resolve => {
-    fs.appendFile(filePath, content, (err) => {
+    fs.appendFile(filePath, content, err => {
       if (err) {
         console.log(err);
         resolve(false);
@@ -61,42 +64,5 @@ async function createFile(filePath: string, content: string = "") {
         resolve(true);
       }
     });
-  });
-}
-
-function fileExists(path: string) {
-  return new Promise<boolean>((resolve) => {
-    fs.exists(path, exists => {
-      resolve(exists);
-    });
-  });
-}
-
-function vueTemplate(componentName: string) {
-  return `<template>
-</template>  
-
-<script lang="ts" src="./${componentName}.vue.ts"></script>
-
-<style scoped>
-</style>
-`;
-}
-
-function tsTemplate(componentName: string) {
-  return `import Vue from "vue";
-import Component from "vue-class-component";
-
-@Component
-export default class ${componentName} extends Vue {
-
-}
-`;
-}
-
-function selectFile(filePath: string) {
-  var file = vscode.Uri.file(filePath);
-  vscode.workspace.openTextDocument(file).then((doc: any) => {
-    vscode.window.showTextDocument(doc);
   });
 }
